@@ -1,0 +1,60 @@
+package me.amira.studentmvc;
+
+import me.amira.studentmvc.entities.Gender;
+import me.amira.studentmvc.entities.Student;
+import me.amira.studentmvc.repositories.StudentRepository;
+import me.amira.studentmvc.security.service.SecurityService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Date;
+
+@SpringBootApplication
+public class StudentMvcApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(StudentMvcApplication.class, args);
+    }
+
+    @Bean
+        //au démarrage crée moi un PasswordEncoder et tu le place dans context
+    BCryptPasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+   //@Bean
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository){
+        return args -> {
+            studentRepository.save(new Student(null,"IMAD","ELMAJNI","elmajnikhaoula99@gmail.com",new Date(), Gender.Feminin,true,"https://randomuser.me/api/portraits/men/96.jpg"));
+            studentRepository.save(new Student(null,"MADIHA","ELMAJNI","elmajnikhaoula99@gmail.com",new Date(), Gender.Feminin,true,"https://randomuser.me/api/portraits/women/45.jpg"));
+            studentRepository.save(new Student(null,"YASSINE","ELMAJNI","elmajnikhaoula99@gmail.com",new Date(), Gender.Feminin,true,"https://randomuser.me/api/portraits/women/60.jpg"));
+            studentRepository.save(new Student(null,"HASSANE","ELMAJNI","elmajnikhaoula99@gmail.com",new Date(), Gender.Feminin,true,"https://randomuser.me/api/portraits/men/62.jpg"));
+
+            studentRepository.findAll().forEach(p->{
+                System.out.println(p.getNom());
+            });
+
+        };
+    }
+    //@Bean
+    CommandLineRunner saveUsers(SecurityService securityService){
+        return args ->{
+            securityService.saveNewUser("khaoula","1234","1234");
+            securityService.saveNewUser("ahmed","1234","1234");
+            securityService.saveNewUser("mohammed","1234","1234");
+
+            securityService.saveNewRole("USER","");
+            securityService.saveNewRole("ADMIN","");
+
+            securityService.addRoleToUser("khaoula","USER");
+            securityService.addRoleToUser("khaoula","ADMIN");
+            securityService.addRoleToUser("mohammed","USER");
+            securityService.addRoleToUser("ahmed","USER");
+
+
+        };
+    }
+}

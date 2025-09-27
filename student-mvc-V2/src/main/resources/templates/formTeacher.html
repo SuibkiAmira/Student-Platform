@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template4">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Teacher</title>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">Add new Teacher</div>
+            <div class="card-body">
+                <form method="post" th:action="@{/admin/save-teacher}">
+                    <div class="form-group mt-2">
+                        <label class="control-label">Firstname</label>
+                        <input class="form-control" name="nom" type="text" th:required="required" th:value="${teacher.nom}">
+                        <span th:errors="${teacher.nom}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label class="control-label">Lastname</label>
+                        <input class="form-control" name="prenom" type="text" th:required="required" th:value="${teacher.prenom}">
+                        <span th:errors="${teacher.prenom}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label class="control-label">Email</label>
+                        <input class="form-control" name="email" type="text" th:required="required" th:value="${teacher.email}">
+                        <span th:errors="${teacher.email}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label class="control-label">Birth Date</label>
+                        <input class="form-control" name="dateNaissance" type="date" th:required="required"
+                               th:value="${teacher.dateNaissance}">
+                        <span th:errors="${teacher.dateNaissance}" class="text-danger"></span>
+                    </div>
+
+                    <!--<div class="form-group mt-2">
+                        <label class="control-label">Genre</label><br>
+                        <input type="radio" id="feminin" name="genre" value="feminin" th:value="feminin">
+                        <label for="feminin">Feminin</label><br>
+                        <input type="radio"id="masculin" name="genre"  value="masculin" th:value="masculin">
+                        <label for="masculin">Masculin</label><br>
+                        <span th:errors="${teacher.genre}" class="text-danger"></span>
+                    </div>-->
+
+                    <div th:each="model : ${T(me.amira.studentmvc.entities.Gender).values()}">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" th:field="*{teacher.genre}" th:value="${model}" class="custom-control-input">
+                            <label class="custom-control-label" th:for="${#ids.prev('genre')}" th:text="${model}">model</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <label class="form-check-label">Status</label>
+                        <input name="enRegle" class="form-check-input" type="checkbox" th:checked="${teacher.enRegle}" >
+
+                        <span th:errors="${teacher.enRegle}" class="text-danger"></span>
+                    </div>
+                    <div class="mt-4">
+                        <a class="btn btn-outline-primary" th:href="@{/user/teachers(id=${teacher.id}, keyword=${keyword}, page=${page})}">
+                            <i class="fas fa-arrow-alt-circle-left"></i>
+                        </a>
+                        <button type="submit" onclick="swal({
+                        title: 'Addition!',
+                        text: 'You added  anew Teacher!',
+                        icon: 'success',
+                        button: 'Aww yiss!',
+                        });" class="btn btn-outline-primary"><i class="fas fa-user-plus"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

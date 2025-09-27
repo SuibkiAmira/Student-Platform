@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template4">
+<head>
+  <meta charset="UTF-8">
+  <title>Add new Subject</title>
+</head>
+<body>
+<div layout:fragment="content1">
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header">Add new Subject</div>
+      <div class="card-body">
+        <form method="post" th:action="@{/admin/save-Subject}">
+          <div class="form-group mt-2">
+            <label class="control-label">Name</label>
+            <input class="form-control" name="nom" type="text" th:required="required" th:value="${subject.nom}">
+            <span th:errors="${subject.nom}" class="text-danger"></span>
+          </div>
+          <div class="form-group mt-2">
+            <label class="control-label">Professor's name</label>
+            <input class="form-control" name="professorsname" type="text" th:required="required" th:value="${subject.professorsname}">
+            <span th:errors="${subject.id}" class="text-danger"></span>
+          </div>
+          <div class="form-group mt-2">
+            <label class="control-label">Description</label>
+            <input class="form-control" name="description" type="text" th:required="required"
+                   th:value="${subject.description}">
+            <span th:errors="${subject.description}" class="text-danger"></span>
+          </div>
+
+          <div class="mt-4">
+            <a class="btn btn-outline-primary" th:href="@{/user/subjects(id=${subject.id}, keyword=${keyword}, page=${page})}">
+              <i class="fas fa-arrow-alt-circle-left"></i>
+            </a>
+            <button type="submit" onclick="swal({
+                        title: 'Addition!',
+                        text: 'You added  anew Subject!',
+                        icon: 'success',
+                        button: 'Aww yiss!',
+                        });" class="btn btn-outline-primary"><i class="fas fa-user-plus"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

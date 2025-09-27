@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="template4">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Students Management</title>
+</head>
+<body>
+<div layout:fragment="content1">
+    <h2 class="m-4">Student Management</h2>
+    <div class="container mt-4">
+        <!-- Formulaire de recherche -->
+        <div>
+            <form method="get" th:action="@{/user/students}">
+                <label>Search for a student :</label>
+                <input type="text" name="keyword" placeholder="Student Name" th:value="${keyword}">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <!-- Affichage des étudiants -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="s : ${listStudents}">
+                <div class="card h-100">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Student_%28example%29.svg"  class="card-img-top" alt="..." style="height: 15rem; width: 15rem;">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${s.nom} + ' ' + ${s.prenom}"></h5>
+                        <div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" th:text="${s.email}"></li>
+                                <li class="list-group-item" th:text="${s.genre}"></li>
+                                <li class="list-group-item" th:text="${s.dateNaissance}"></li>
+                                <li class="list-group-item" th:text="${s.enRegle}"></li>
+                            </ul>
+                        </div>
+
+                        <!-- Actions disponibles -->
+                        <div>
+                            <!-- Bouton de suppression (accessible uniquement par un ADMIN) -->
+                            <a sec:authorize="hasAuthority('ADMIN')"
+                               class="btn btn-outline-danger"
+                               th:href="@{/admin/delete(id=${s.id}, keyword=${keyword}, page=${currentPage})}">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                            <!-- Bouton d'édition (accessible uniquement par un ADMIN) -->
+                            <a sec:authorize="hasAuthority('ADMIN')"
+                               class="btn btn-outline-warning"
+                               th:href="@{/admin/editStudent(id=${s.id}, keyword=${keyword}, page=${currentPage})}">
+                                <i class="fas fa-user-edit"></i>
+                            </a>
+                            <!-- Lien vers les détails de l'étudiant -->
+                            <a class="btn btn-outline-info"
+                               th:href="@{/user/listStudent(id=${s.id}, keyword=${keyword}, page=${currentPage})}">
+                                <i class="fas fa-list"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div>
+            <ul class="nav nav-pills mt-4">
+                <li th:each="page, status : ${pages}">
+                    <a th:class="${status.index == currentPage ? 'btn btn-primary ms-1' : 'btn btn-outline-primary ms-1'}"
+                       th:text="${status.index + 1}"
+                       th:href="@{/user/students(page=${status.index}, keyword=${keyword})}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Bouton pour ajouter un nouvel étudiant (accessible uniquement par un ADMIN) -->
+        <div>
+            <ul class="nav nav-pills">
+                <li sec:authorize="hasAuthority('ADMIN')">
+                    <a class="btn btn-outline-primary mt-4" th:href="@{/admin/formStudents}"><i class="fas fa-user-plus"></i></a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

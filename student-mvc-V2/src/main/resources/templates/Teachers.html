@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="template4"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Teachers Management</title>
+</head>
+<body>
+<div layout:fragment="content1">
+    <h2 class="m-4">Teacher Management</h2>
+    <div class="container mt-4">
+        <div>
+            <form method="get" th:action="@{/user/teachers}">
+                <label>Search for a teacher:</label>
+                <input type="text" name="keyword" placeholder="Teacher name" th:value="${keyword}">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="s:${listTeachers}">
+                <div class="card h-100" >
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Teacher_%2828111%29_-_The_Noun_Project.svg"  class="card-img-top" alt="..." style="height: 15rem; width: 15rem;">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${s.nom} +${s.prenom}"></h5>
+                        <div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" th:text="${s.email}"></li>
+                                <li class="list-group-item" th:text="${s.genre}"></li>
+                                <li class="list-group-item" th:text="${s.dateNaissance}"></li>
+                                <li class="list-group-item" th:text="${s.enRegle}"></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <a sec:authorize="hasAuthority('ADMIN')" onclick="return Swal.fire({
+                          title: 'Are you sure?',
+                          text: 'You won t be able to revert this Teacher!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!'
+                            }).then((result) => {
+                            if (result.isConfirmed) {
+
+                            Swal.fire(
+                            'Deleted!',
+                            'The Teacher has been deleted.',
+                            'success'
+                            )
+                            }
+                            }) "
+                               class="btn btn-outline-danger"
+                               th:href="@{/admin/delete-teacher(id=${s.id}, keyword=${keyword}, page=${currentPage})}"><i
+                                    class="fas fa-trash-alt"></i></a>
+                            <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-outline-warning"
+                               th:href="@{/admin/editTeacher(id=${s.id}, keyword=${keyword}, page=${currentPage})}"><i
+                                    class="fas fa-user-edit"></i></a>
+                            <a class="btn btn-outline-info"
+                               th:href="@{/user/listTeacher(id=${s.id}, keyword=${keyword}, page=${currentPage})}"><i
+                                    class="fas fa-list"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <ul class="nav nav-pills mt-4">
+                <li th:each="page,status:${pages}">
+                    <a th:class="${status.index==currentPage?'btn btn-primary ms-1':'btn btn-outline-primary ms-1'}"
+                       th:text="${status.index}"
+                       th:href="@{/user/teachers(page=${status.index},keyword=${keyword})}"></a>
+                </li>
+            </ul>
+            <ul class="nav nav-pills">
+                <li sec:authorize="hasAuthority('ADMIN')">
+                    <a class="btn btn-outline-primary mt-4" th:href="@{/admin/formTeacher}"><i class="fas fa-user-plus"></i></a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

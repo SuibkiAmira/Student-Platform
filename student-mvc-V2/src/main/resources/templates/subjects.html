@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="template4">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Subjects Management</title>
+</head>
+<body>
+<div layout:fragment="content1">
+  <h2 class="m-4">Subject Management</h2>
+  <div class="container mt-4">
+    <!-- Formulaire de recherche -->
+    <div>
+      <form method="get" th:action="@{/user/subjects}">
+        <label>Search for a subject:</label>
+        <input type="text" name="keyword" placeholder="Subject Name" th:value="${keyword}">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+      </form>
+    </div>
+
+    <!-- Affichage des matieres -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col" th:each="s : ${listSubjects}">
+        <div class="card h-100">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/OOjs_UI_icon_speechBubbles-ltr.svg"  class="card-img-top" alt="..." style="height: 15rem; width: 15rem;">
+          <div class="card-body">
+            <h5 class="card-title" th:text="${s.nom} + ' ' + ${s.id}"></h5>
+            <div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" th:text="${s.description}"></li>
+              </ul>
+            </div>
+
+            <!-- Actions disponibles -->
+            <div>
+              <!-- Bouton de suppression (accessible uniquement par un ADMIN) -->
+              <a sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')"
+                 class="btn btn-outline-danger"
+                 th:href="@{/admin/delete-subject(id=${s.id}, keyword=${keyword}, page=${currentPage})}">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+              <!-- Bouton d'édition (accessible uniquement par un ADMIN) -->
+              <a sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')"
+                 class="btn btn-outline-warning"
+                 th:href="@{/admin/editSubject(id=${s.id}, keyword=${keyword}, page=${currentPage})}">
+                <i class="fas fa-user-edit"></i>
+              </a>
+              <!-- Lien vers les détails des matieres -->
+              <a class="btn btn-outline-info"
+                 th:href="@{/user/listSubject(id=${s.id}, keyword=${keyword}, page=${currentPage})}">
+                <i class="fas fa-list"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div>
+      <ul class="nav nav-pills mt-4">
+        <li th:each="page, status : ${pages}">
+          <a th:class="${status.index == currentPage ? 'btn btn-primary ms-1' : 'btn btn-outline-primary ms-1'}"
+             th:text="${status.index + 1}"
+             th:href="@{/user/subjects(page=${status.index}, keyword=${keyword})}"></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bouton pour ajouter une nouvelle matiere (accessible uniquement par un ADMIN) -->
+    <div>
+      <ul class="nav nav-pills">
+        <li sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">
+          <a class="btn btn-outline-primary mt-4" th:href="@{/admin/formSubjects}"><i class="fas fa-user-plus"></i></a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

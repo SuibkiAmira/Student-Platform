@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template4">
+<head>
+    <meta charset="UTF-8">
+    <title>Update teacher</title>
+
+</head>
+<body>
+<div layout:fragment="content1">
+
+
+    <form method="post" th:action="@{/admin/save-teacher(page=${page},keyword=${keyword})}">
+        <div class="container rounded bg-white mt-5 mb-5">
+            <div class="row">
+                <div class="col-md-3 border-right">
+                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                        <img class="rounded-circle mt-5" width="150px" src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Teacher_%2828111%29_-_The_Noun_Project.svg"><span class="font-weight-bold"><label th:text="${teacher.nom}"></label></span><span class="text-black-50"><label th:text="${teacher.email}"></label></span><span> </span></div>
+                </div>
+                <div class="col-md-5 border-right">
+                    <div class="p-3 py-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-right">Consult teacher's information</h4>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="labels">ID : </label>
+                                <label class="control-label" th:text="${teacher.id}"></label>
+                                <input class="form-control" name="id" type="hidden" th:value="${teacher.id}">
+
+                            </div>
+                            <div class="col-md-12"><label class="labels">Firstname : </label>
+                                <input class="form-control" name="nom" type="text" th:value="${teacher.nom}">
+                                <span th:errors="${teacher.nom}" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12"><label class="labels">Lastname : </label>
+                                <input class="form-control" name="prenom" type="text" th:value="${teacher.prenom}">
+                                <span th:errors="${teacher.prenom}" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12"><label class="labels">Sexe : </label>
+                                <div th:each="model : ${T(me.amira.studentmvc.entities.Gender).values()}">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" th:field="*{teacher.genre}" th:value="${model}" class="custom-control-input">
+                                        <label class="custom-control-label" th:for="${#ids.prev('genre')}" th:text="${model}">model</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><label class="labels">Email : </label>
+                                <input class="form-control" name="email" type="text" th:value="${teacher.email}">
+                                <span th:errors="${teacher.email}" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12"><label class="labels">Birth Date : </label>
+                                <input class="form-control" name="dateNaissance" type="date"
+                                       th:value="${teacher.dateNaissance}">
+                                <span th:errors="${teacher.dateNaissance}" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12"><label class="labels">Status :  </label>
+                                <input name="enRegle" type="checkbox" th:checked="${teacher.enRegle}" >
+                                <span th:errors="${teacher.enRegle}" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 text-center">
+                            <a class="btn btn-outline-primary" th:href="@{/user/teachers(id=${teacher.id}, keyword=${keyword}, page=${page})}">
+                                <i class="fas fa-arrow-alt-circle-left"></i>
+                            </a>
+                            <button onclick="swal('Well Update!', 'You update this teacher!', 'success')" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+
+</div>
+</body>
+</html>
